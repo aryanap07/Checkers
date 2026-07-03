@@ -2,7 +2,7 @@ from engine.constants import BLACK, KING, MAN, WHITE
 from engine.piece import Piece
 
 
-def test_piece_defaults():
+def test_piece_defaults() -> None:
     piece = Piece(WHITE)
 
     assert piece.color == WHITE
@@ -11,7 +11,7 @@ def test_piece_defaults():
     assert piece.is_man
 
 
-def test_piece_promote():
+def test_piece_promote() -> None:
     piece = Piece(BLACK)
 
     piece.promote()
@@ -20,7 +20,7 @@ def test_piece_promote():
     assert piece.is_king
 
 
-def test_piece_copy():
+def test_piece_copy() -> None:
     piece = Piece(WHITE)
 
     copy = piece.copy()
@@ -29,18 +29,18 @@ def test_piece_copy():
     assert copy == piece
 
 
-def test_repr():
+def test_repr() -> None:
     assert repr(Piece(WHITE)) == "WM"
 
 
-def test_is_black():
+def test_is_black() -> None:
     piece = Piece(BLACK)
 
     assert piece.is_black
     assert not piece.is_white
 
 
-def test_is_king_repr():
+def test_is_king_repr() -> None:
     piece = Piece(BLACK, KING)
 
     assert piece.is_king

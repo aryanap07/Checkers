@@ -1,14 +1,14 @@
 from engine.move import Move
 
 
-def test_simple_move():
+def test_simple_move() -> None:
     move = Move((5, 0), (4, 1))
 
     assert not move.is_capture
     assert move.jump_count == 0
 
 
-def test_capture():
+def test_capture() -> None:
     move = Move(
         (5, 0),
         (1, 4),
@@ -19,7 +19,7 @@ def test_capture():
     assert move.jump_count == 2
 
 
-def test_promotion():
+def test_promotion() -> None:
     move = Move(
         (1, 2),
         (0, 3),

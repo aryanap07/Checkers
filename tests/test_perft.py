@@ -16,30 +16,30 @@ from engine.perft import (
 )
 
 
-def test_perft_depth_zero(game):
+def test_perft_depth_zero(game: Game) -> None:
     assert perft(game, 0) == 1
 
 
-def test_perft_depth_one(game):
+def test_perft_depth_one(game: Game) -> None:
     assert perft(game, 1) == len(game.legal_moves)
 
 
-def test_perft_depth_two(game):
+def test_perft_depth_two(game: Game) -> None:
     assert perft(game, 2) > 0
 
 
-def test_divide(game):
+def test_divide(game: Game) -> None:
     result = divide(game, 1)
 
     assert sum(result.values()) == len(game.legal_moves)
 
 
-def test_divide_rejects_invalid_depth(game):
+def test_divide_rejects_invalid_depth(game: Game) -> None:
     with pytest.raises(ValueError):
         divide(game, 0)
 
 
-def test_bench(game):
+def test_bench(game: Game) -> None:
     results = bench(game, 2)
 
     assert len(results) == 2
@@ -49,7 +49,7 @@ def test_bench(game):
         assert elapsed >= 0
 
 
-def test_perft_matches_known_position():
+def test_perft_matches_known_position() -> None:
     board = make_board(
         {
             (4, 4): (WHITE, 0),
@@ -61,7 +61,7 @@ def test_perft_matches_known_position():
     assert perft(game, 1) == 1
 
 
-def test_format_move_simple():
+def test_format_move_simple() -> None:
     from engine.move import Move
 
     simple = Move((5, 0), (4, 1))
@@ -71,14 +71,14 @@ def test_format_move_simple():
     assert _format_move(capture) == "(5, 0)x(3, 2)"
 
 
-def test_print_divide(game, capsys):
+def test_print_divide(game: Game, capsys: pytest.CaptureFixture[str]) -> None:
     _print_divide(game, 1)
 
     captured = capsys.readouterr()
     assert "total:" in captured.out
 
 
-def test_print_bench(game, capsys):
+def test_print_bench(game: Game, capsys: pytest.CaptureFixture[str]) -> None:
     _print_bench(game, 2)
 
     captured = capsys.readouterr()
@@ -86,7 +86,9 @@ def test_print_bench(game, capsys):
     assert "nodes/s" in captured.out
 
 
-def test_main_block_bench(monkeypatch, capsys):
+def test_main_block_bench(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     monkeypatch.setattr(sys, "argv", ["perft.py", "2"])
     sys.modules.pop("engine.perft", None)
 
@@ -96,7 +98,9 @@ def test_main_block_bench(monkeypatch, capsys):
     assert "depth" in captured.out
 
 
-def test_main_block_divide(monkeypatch, capsys):
+def test_main_block_divide(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     monkeypatch.setattr(sys, "argv", ["perft.py", "2", "divide"])
     sys.modules.pop("engine.perft", None)
 

@@ -1,28 +1,29 @@
 from helpers import make_board
 
 from engine.constants import BLACK, KING, WHITE
+from engine.game import Game
 from engine.generator import generate_moves, generate_piece_moves, has_legal_moves
 
 
-def test_initial_moves(game):
+def test_initial_moves(game: Game) -> None:
     moves = generate_moves(game.board, WHITE)
 
     assert len(moves) > 0
 
 
-def test_all_moves_are_unique(game):
+def test_all_moves_are_unique(game: Game) -> None:
     moves = generate_moves(game.board, WHITE)
 
     assert len(moves) == len(set(moves))
 
 
-def test_generate_piece_moves_empty_square():
+def test_generate_piece_moves_empty_square() -> None:
     board = make_board({})
 
     assert generate_piece_moves(board, 4, 4) == []
 
 
-def test_generate_piece_moves_simple():
+def test_generate_piece_moves_simple() -> None:
     board = make_board({(4, 4): (WHITE, 0)})
 
     moves = generate_piece_moves(board, 4, 4)
@@ -31,7 +32,7 @@ def test_generate_piece_moves_simple():
     assert all(not move.is_capture for move in moves)
 
 
-def test_generate_piece_moves_prefers_capture():
+def test_generate_piece_moves_prefers_capture() -> None:
     board = make_board(
         {
             (4, 4): (WHITE, 0),
@@ -47,19 +48,19 @@ def test_generate_piece_moves_prefers_capture():
     assert moves[0].end == (2, 2)
 
 
-def test_has_legal_moves_true():
+def test_has_legal_moves_true() -> None:
     board = make_board({(4, 4): (WHITE, 0)})
 
     assert has_legal_moves(board, WHITE)
 
 
-def test_has_legal_moves_false():
+def test_has_legal_moves_false() -> None:
     board = make_board({(0, 0): (WHITE, 0)})
 
     assert not has_legal_moves(board, WHITE)
 
 
-def test_has_legal_moves_true_via_capture():
+def test_has_legal_moves_true_via_capture() -> None:
     board = make_board(
         {
             (4, 4): (WHITE, 0),
@@ -70,7 +71,7 @@ def test_has_legal_moves_true_via_capture():
     assert has_legal_moves(board, WHITE)
 
 
-def test_generate_moves_forces_capture():
+def test_generate_moves_forces_capture() -> None:
     board = make_board(
         {
             (4, 4): (WHITE, 0),
@@ -84,7 +85,7 @@ def test_generate_moves_forces_capture():
     assert all(move.is_capture for move in moves)
 
 
-def test_king_simple_move_not_promoted():
+def test_king_simple_move_not_promoted() -> None:
     board = make_board({(4, 4): (WHITE, KING)})
 
     moves = generate_piece_moves(board, 4, 4)
@@ -93,7 +94,7 @@ def test_king_simple_move_not_promoted():
     assert all(not move.is_promotion for move in moves)
 
 
-def test_multi_jump_capture_chain():
+def test_multi_jump_capture_chain() -> None:
     board = make_board(
         {
             (6, 6): (WHITE, 0),
@@ -111,7 +112,7 @@ def test_multi_jump_capture_chain():
     assert move.captures == ((5, 5), (3, 3))
 
 
-def test_capture_promotes_man_to_king():
+def test_capture_promotes_man_to_king() -> None:
     board = make_board(
         {
             (2, 2): (WHITE, 0),

@@ -7,7 +7,7 @@ from engine.game import Game
 from engine.move import Move
 
 
-def test_make_and_undo(game):
+def test_make_and_undo(game: Game) -> None:
     before = str(game.board)
 
     move = game.legal_moves[0]
@@ -18,7 +18,7 @@ def test_make_and_undo(game):
     assert str(game.board) == before
 
 
-def test_turn_changes(game):
+def test_turn_changes(game: Game) -> None:
     turn = game.turn
 
     game.make_move(game.legal_moves[0])
@@ -26,14 +26,14 @@ def test_turn_changes(game):
     assert game.turn != turn
 
 
-def test_make_illegal_move_raises(game):
+def test_make_illegal_move_raises(game: Game) -> None:
     fake_move = Move((3, 3), (2, 2))
 
     with pytest.raises(ValueError):
         game.make_move(fake_move)
 
 
-def test_make_move_no_piece_raises(game):
+def test_make_move_no_piece_raises(game: Game) -> None:
     move = game.legal_moves[0]
     # Remove the piece directly, bypassing the move-cache invalidation, so
     # the (stale) cached move is still considered "legal" but the piece is
@@ -44,7 +44,7 @@ def test_make_move_no_piece_raises(game):
         game.make_move(move)
 
 
-def test_make_move_no_piece_to_capture_raises():
+def test_make_move_no_piece_to_capture_raises() -> None:
     board = make_board(
         {
             (4, 4): (WHITE, 0),
@@ -62,7 +62,7 @@ def test_make_move_no_piece_to_capture_raises():
         game.make_move(move)
 
 
-def test_make_move_executes_capture():
+def test_make_move_executes_capture() -> None:
     board = make_board(
         {
             (4, 4): (WHITE, 0),
@@ -79,7 +79,7 @@ def test_make_move_executes_capture():
     assert game.board.get_piece(2, 2) is not None
 
 
-def test_make_move_promotes_piece():
+def test_make_move_promotes_piece() -> None:
     board = make_board(
         {
             (2, 2): (WHITE, 0),
@@ -95,12 +95,12 @@ def test_make_move_promotes_piece():
     assert piece.is_king
 
 
-def test_undo_move_with_no_history_raises(game):
+def test_undo_move_with_no_history_raises(game: Game) -> None:
     with pytest.raises(IndexError):
         game.undo_move()
 
 
-def test_undo_move_restores_captured_piece():
+def test_undo_move_restores_captured_piece() -> None:
     board = make_board(
         {
             (4, 4): (WHITE, 0),
@@ -119,12 +119,12 @@ def test_undo_move_restores_captured_piece():
     assert game.turn == WHITE
 
 
-def test_winner_is_none_when_moves_available(game):
+def test_winner_is_none_when_moves_available(game: Game) -> None:
     assert game.winner is None
     assert not game.is_over
 
 
-def test_winner_set_when_no_moves():
+def test_winner_set_when_no_moves() -> None:
     board = make_board({(0, 0): (WHITE, 0)})
     game = Game(board, turn=WHITE)
 
@@ -132,7 +132,7 @@ def test_winner_set_when_no_moves():
     assert game.winner == BLACK
 
 
-def test_move_count(game):
+def test_move_count(game: Game) -> None:
     assert game.move_count == 0
 
     game.make_move(game.legal_moves[0])
@@ -140,7 +140,7 @@ def test_move_count(game):
     assert game.move_count == 1
 
 
-def test_copy_is_independent(game):
+def test_copy_is_independent(game: Game) -> None:
     clone = game.copy()
     clone.make_move(clone.legal_moves[0])
 
@@ -149,7 +149,7 @@ def test_copy_is_independent(game):
     assert clone.board is not game.board
 
 
-def test_reset_restores_default_board(game):
+def test_reset_restores_default_board(game: Game) -> None:
     game.make_move(game.legal_moves[0])
 
     game.reset()
@@ -159,7 +159,7 @@ def test_reset_restores_default_board(game):
     assert len(game.legal_moves) > 0
 
 
-def test_reset_with_custom_board():
+def test_reset_with_custom_board() -> None:
     game = Game()
     custom_board = make_board({(0, 0): (WHITE, 0)})
 
@@ -170,15 +170,15 @@ def test_reset_with_custom_board():
     assert game.history == []
 
 
-def test_str_matches_board_str(game):
+def test_str_matches_board_str(game: Game) -> None:
     assert str(game) == str(game.board)
 
 
-def test_moves_from_unknown_square(game):
+def test_moves_from_unknown_square(game: Game) -> None:
     assert game.moves_from(3, 3) == ()
 
 
-def test_default_board_created_when_none_given():
+def test_default_board_created_when_none_given() -> None:
     game = Game()
 
     assert isinstance(game.board, Board)

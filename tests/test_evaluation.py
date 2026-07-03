@@ -5,24 +5,24 @@ from engine.evaluation import WIN_SCORE, evaluate, evaluate_for, evaluate_game
 from engine.game import Game
 
 
-def test_start_position_is_equal(game):
+def test_start_position_is_equal(game: Game) -> None:
     assert evaluate(game.board) == 0
 
 
-def test_king_worth_more_than_man():
+def test_king_worth_more_than_man() -> None:
     man_board = make_board({(4, 4): (WHITE, 0)})
     king_board = make_board({(4, 4): (WHITE, KING)})
 
     assert evaluate(king_board) > evaluate(man_board)
 
 
-def test_evaluate_black_king():
+def test_evaluate_black_king() -> None:
     board = make_board({(4, 4): (BLACK, KING)})
 
     assert evaluate(board) < 0
 
 
-def test_evaluate_for_white_and_black():
+def test_evaluate_for_white_and_black() -> None:
     board = make_board({(4, 4): (WHITE, 0)})
 
     white_score = evaluate_for(board, WHITE)
@@ -32,11 +32,11 @@ def test_evaluate_for_white_and_black():
     assert black_score == -white_score
 
 
-def test_evaluate_game_no_winner(game):
+def test_evaluate_game_no_winner(game: Game) -> None:
     assert evaluate_game(game) == evaluate(game.board)
 
 
-def test_evaluate_game_white_wins():
+def test_evaluate_game_white_wins() -> None:
     board = make_board({(7, 7): (BLACK, 0)})
     game = Game(board, turn=BLACK)
 
@@ -44,7 +44,7 @@ def test_evaluate_game_white_wins():
     assert evaluate_game(game) == WIN_SCORE
 
 
-def test_evaluate_game_black_wins():
+def test_evaluate_game_black_wins() -> None:
     board = make_board({(0, 0): (WHITE, 0)})
     game = Game(board, turn=WHITE)
 

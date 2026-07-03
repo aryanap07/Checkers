@@ -1,7 +1,7 @@
 from engine.board import Board
 
 
-def test_initial_piece_count():
+def test_initial_piece_count() -> None:
     board = Board()
 
     pieces = sum(
@@ -13,7 +13,7 @@ def test_initial_piece_count():
     assert pieces == 24
 
 
-def test_move_piece():
+def test_move_piece() -> None:
     board = Board()
 
     board.move_piece(5, 0, 4, 1)
@@ -22,7 +22,7 @@ def test_move_piece():
     assert board.get_piece(4, 1) is not None
 
 
-def test_copy():
+def test_copy() -> None:
     board = Board()
 
     clone = board.copy()
@@ -31,7 +31,7 @@ def test_copy():
     assert clone.grid != []
 
 
-def test_copy_is_independent():
+def test_copy_is_independent() -> None:
     board = Board()
 
     clone = board.copy()
@@ -41,7 +41,7 @@ def test_copy_is_independent():
     assert clone.get_piece(0, 1) is None
 
 
-def test_remove_piece():
+def test_remove_piece() -> None:
     board = Board()
 
     board.remove_piece(0, 1)
@@ -49,7 +49,7 @@ def test_remove_piece():
     assert board.get_piece(0, 1) is None
 
 
-def test_set_piece():
+def test_set_piece() -> None:
     board = Board()
 
     board.set_piece(3, 3, None)
@@ -57,14 +57,14 @@ def test_set_piece():
     assert board.get_piece(3, 3) is None
 
 
-def test_getitem():
+def test_getitem() -> None:
     board = Board()
 
     assert board[0, 1] is board.grid[0][1]
     assert board[3, 3] is None
 
 
-def test_setitem():
+def test_setitem() -> None:
     board = Board()
     piece = board.get_piece(0, 1)
 
@@ -73,14 +73,14 @@ def test_setitem():
     assert board.grid[3][3] is piece
 
 
-def test_in_bounds():
+def test_in_bounds() -> None:
     assert Board.in_bounds(0, 0)
     assert Board.in_bounds(7, 7)
     assert not Board.in_bounds(-1, 0)
     assert not Board.in_bounds(0, 8)
 
 
-def test_pieces_iterator():
+def test_pieces_iterator() -> None:
     board = Board()
 
     white_pieces = list(board.pieces(0))
@@ -92,7 +92,7 @@ def test_pieces_iterator():
         assert board.get_piece(row, col) is piece
 
 
-def test_str_representation():
+def test_str_representation() -> None:
     board = Board()
 
     text = str(board)

@@ -4,25 +4,26 @@ from helpers import make_board
 from engine.constants import WHITE
 from engine.game import Game
 from engine.minimax import (
+    TranspositionTable,
     best_move,
     iterative_deepening,
     principal_variation,
 )
 
 
-def test_best_move(game):
+def test_best_move(game: Game) -> None:
     move, score = best_move(game, 2)
 
     assert move is not None
     assert isinstance(score, int)
 
 
-def test_best_move_rejects_invalid_depth(game):
+def test_best_move_rejects_invalid_depth(game: Game) -> None:
     with pytest.raises(ValueError):
         best_move(game, 0)
 
 
-def test_best_move_no_legal_moves_returns_none():
+def test_best_move_no_legal_moves_returns_none() -> None:
     board = make_board({(0, 0): (WHITE, 0)})
     game = Game(board, turn=WHITE)
 
@@ -32,8 +33,8 @@ def test_best_move_no_legal_moves_returns_none():
     assert score < 0
 
 
-def test_best_move_reuses_shared_table(game):
-    table = {}
+def test_best_move_reuses_shared_table(game: Game) -> None:
+    table: TranspositionTable = {}
 
     best_move(game, 2, table)
     move, score = best_move(game, 2, table)
@@ -42,7 +43,7 @@ def test_best_move_reuses_shared_table(game):
     assert table
 
 
-def test_negamax_hits_terminal_no_moves_branch():
+def test_negamax_hits_terminal_no_moves_branch() -> None:
     # White has three simple (non-capturing) moves available. One of them
     # leaves the black piece completely boxed in with zero legal moves,
     # which forces the internal negamax search to hit its "no legal
@@ -63,7 +64,7 @@ def test_negamax_hits_terminal_no_moves_branch():
     assert isinstance(score, int)
 
 
-def test_iterative_deepening(game):
+def test_iterative_deepening(game: Game) -> None:
     move, score, table = iterative_deepening(game, 2)
 
     assert move is not None
@@ -71,7 +72,7 @@ def test_iterative_deepening(game):
     assert table
 
 
-def test_iterative_deepening_stops_on_forced_win():
+def test_iterative_deepening_stops_on_forced_win() -> None:
     board = make_board({(6, 0): (WHITE, 0)})
     game = Game(board, turn=WHITE)
 
@@ -80,13 +81,13 @@ def test_iterative_deepening_stops_on_forced_win():
     assert move is not None
 
 
-def test_principal_variation_empty_table(game):
+def test_principal_variation_empty_table(game: Game) -> None:
     line = principal_variation(game, {})
 
     assert line == []
 
 
-def test_principal_variation_follows_table(game):
+def test_principal_variation_follows_table(game: Game) -> None:
     _, _, table = iterative_deepening(game, 2)
 
     line = principal_variation(game, table, max_length=2)
@@ -95,7 +96,7 @@ def test_principal_variation_follows_table(game):
     assert len(line) <= 2
 
 
-def test_principal_variation_stops_on_illegal_move(game):
+def test_principal_variation_stops_on_illegal_move(game: Game) -> None:
     _, _, table = iterative_deepening(game, 2)
 
     # A very small max_length still exercises the loop/break logic.
@@ -104,7 +105,7 @@ def test_principal_variation_stops_on_illegal_move(game):
     assert line == []
 
 
-def test_principal_variation_breaks_on_stale_move(game):
+def test_principal_variation_breaks_on_stale_move(game: Game) -> None:
     from engine.minimax import EXACT, _zobrist_key
 
     key = _zobrist_key(game.board, game.turn)
@@ -129,7 +130,7 @@ def test_principal_variation_breaks_on_stale_move(game):
     assert line == []
 
 
-def test_negamax_reads_upper_bound_entry(game):
+def test_negamax_reads_upper_bound_entry(game: Game) -> None:
     from engine.minimax import NEG_INF, UPPER, _negamax, _zobrist_key
 
     key = _zobrist_key(game.board, game.turn)
@@ -141,10 +142,10 @@ def test_negamax_reads_upper_bound_entry(game):
     assert isinstance(score, int)
 
 
-def test_negamax_stores_upper_bound_on_fail_low(game):
+def test_negamax_stores_upper_bound_on_fail_low(game: Game) -> None:
     from engine.minimax import POS_INF, UPPER, _negamax, _zobrist_key
 
-    table = {}
+    table: TranspositionTable = {}
     key = _zobrist_key(game.board, game.turn)
 
     # An artificially high alpha guarantees every move fails low, forcing
