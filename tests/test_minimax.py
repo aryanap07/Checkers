@@ -112,9 +112,7 @@ def test_principal_variation_breaks_on_stale_move(game: Game) -> None:
     # Reference a move that does not correspond to any legal move in the
     # current position, forcing the "stale move" break branch.
     stale_move = list(game.legal_moves)[0]
-    other_start_moves = [
-        m for m in game.legal_moves if m.start != stale_move.start
-    ]
+    other_start_moves = [m for m in game.legal_moves if m.start != stale_move.start]
     fake_entry_move = stale_move
     if other_start_moves:
         # Craft a table entry pointing at a move whose start square has no

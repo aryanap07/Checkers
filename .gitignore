@@ -1,9 +1,8 @@
-# Byte-compiled / optimized / DLL files
-*__pycache__
+# Byte-compiled files
+__pycache__/
 *.py[cod]
-*$py.class
 
-# Distribution / packaging
+# Build artifacts
 build/
 dist/
 *.egg-info/
@@ -16,7 +15,7 @@ venv/
 env/
 ENV/
 
-# Testing & coverage
+# Test & coverage
 .pytest_cache/
 .coverage
 .coverage.*
@@ -36,10 +35,6 @@ htmlcov/
 .vscode/
 .idea/
 
-# Operating system files
-.DS_Store
-Thumbs.db
-
 # Environment variables
 .env
 .env.*
@@ -51,6 +46,10 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# OS files
+.DS_Store
+Thumbs.db
 
 # Python version manager
 .python-version

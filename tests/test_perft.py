@@ -108,4 +108,3 @@ def test_main_block_divide(
 
     captured = capsys.readouterr()
     assert "total:" in captured.out
-

@@ -4,11 +4,7 @@ from engine.board import Board
 def test_initial_piece_count() -> None:
     board = Board()
 
-    pieces = sum(
-        piece is not None
-        for row in board.grid
-        for piece in row
-    )
+    pieces = sum(piece is not None for row in board.grid for piece in row)
 
     assert pieces == 24
 
