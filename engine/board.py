@@ -1,3 +1,5 @@
+from collections.abc import Iterator
+
 from .constants import BLACK, BOARD_SIZE, EMPTY, WHITE
 from .piece import Piece
 
@@ -47,7 +49,7 @@ class Board:
     def in_bounds(row: int, col: int) -> bool:
         return 0 <= row < BOARD_SIZE and 0 <= col < BOARD_SIZE
 
-    def pieces(self, color: int):
+    def pieces(self, color: int) -> Iterator[tuple[int, int, Piece]]:
         grid = self.grid
 
         for row in range(BOARD_SIZE):

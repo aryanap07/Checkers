@@ -1,3 +1,5 @@
+from collections.abc import Iterator
+
 from .board import Board
 from .constants import BOARD_SIZE, DIRECTIONS, KING_DIRECTIONS, WHITE
 from .move import Move
@@ -34,13 +36,13 @@ def has_legal_moves(board: Board, color: int) -> bool:
     return False
 
 
-def _iter_all_simple_moves(board: Board, color: int):
+def _iter_all_simple_moves(board: Board, color: int) -> Iterator[Move]:
     grid = board.grid
     for row, col, piece in board.pieces(color):
         yield from _simple_moves(grid, row, col, piece)
 
 
-def _iter_all_captures(board: Board, color: int):
+def _iter_all_captures(board: Board, color: int) -> Iterator[Move]:
     for row, col, piece in board.pieces(color):
         yield from _walk_captures(board, row, col, piece)
 
@@ -53,7 +55,9 @@ def _will_promote(piece: Piece, end_row: int) -> bool:
     return end_row == BOARD_SIZE - 1
 
 
-def _simple_moves(grid: list[list[Piece | None]], row: int, col: int, piece: Piece):
+def _simple_moves(
+    grid: list[list[Piece | None]], row: int, col: int, piece: Piece
+) -> Iterator[Move]:
     directions = KING_DIRECTIONS if piece.is_king else DIRECTIONS[piece.color]
 
     for dr, dc in directions:
@@ -66,7 +70,9 @@ def _simple_moves(grid: list[list[Piece | None]], row: int, col: int, piece: Pie
             )
 
 
-def _walk_captures(board: Board, start_row: int, start_col: int, piece: Piece):
+def _walk_captures(
+    board: Board, start_row: int, start_col: int, piece: Piece
+) -> Iterator[Move]:
     yield from _walk(
         board.grid,
         start_row,
@@ -88,7 +94,7 @@ def _walk(
     piece: Piece,
     was_man: bool,
     captured: list[tuple[int, int]],
-):
+) -> Iterator[Move]:
     extended = False
     directions = KING_DIRECTIONS if piece.is_king else DIRECTIONS[piece.color]
 

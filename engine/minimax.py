@@ -2,7 +2,7 @@ import random
 
 from .board import Board
 from .constants import BOARD_SIZE, WHITE
-from .evaluator import WIN_SCORE, evaluate
+from .evaluator import WIN_SCORE, evaluate  # type: ignore[import-not-found]
 from .game import Game
 from .move import Move
 
@@ -12,6 +12,9 @@ POS_INF = 10_000_000
 EXACT = 0
 LOWER = 1
 UPPER = 2
+
+TTEntry = tuple[int, int, int, Move]
+TranspositionTable = dict[int, TTEntry]
 
 _rng = random.Random(2024)
 
@@ -52,13 +55,13 @@ def _ordered(moves: tuple[Move, ...]) -> list[Move] | tuple[Move, ...]:
 
 def _perspective_score(game: Game) -> int:
     score = evaluate(game.board)
-    return score if game.turn == WHITE else -score
+    return int(score) if game.turn == WHITE else -int(score)
 
 
 def best_move(
     game: Game,
     depth: int,
-    table: dict | None = None,
+    table: TranspositionTable | None = None,
 ) -> tuple[Move | None, int]:
     if depth < 1:
         raise ValueError("depth must be at least 1")
@@ -93,7 +96,9 @@ def best_move(
     return chosen, best_score
 
 
-def _negamax(game: Game, depth: int, alpha: int, beta: int, table: dict) -> int:
+def _negamax(
+    game: Game, depth: int, alpha: int, beta: int, table: TranspositionTable
+) -> int:
     if depth == 0:
         return _perspective_score(game)
 
@@ -116,7 +121,7 @@ def _negamax(game: Game, depth: int, alpha: int, beta: int, table: dict) -> int:
 
     moves = game.legal_moves
     if not moves:
-        return -(WIN_SCORE - depth)
+        return -(int(WIN_SCORE) - depth)
 
     best = NEG_INF
     best_move_here = moves[0]
@@ -151,8 +156,8 @@ def _negamax(game: Game, depth: int, alpha: int, beta: int, table: dict) -> int:
 def iterative_deepening(
     game: Game,
     max_depth: int,
-    table: dict | None = None,
-) -> tuple[Move | None, int, dict]:
+    table: TranspositionTable | None = None,
+) -> tuple[Move | None, int, TranspositionTable]:
     if table is None:
         table = {}
 
@@ -169,7 +174,7 @@ def iterative_deepening(
 
 def principal_variation(
     game: Game,
-    table: dict,
+    table: TranspositionTable,
     max_length: int = 20,
 ) -> list[Move]:
     line: list[Move] = []

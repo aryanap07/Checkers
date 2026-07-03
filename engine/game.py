@@ -73,7 +73,16 @@ class Game:
         end_row, end_col = move.end
 
         original_piece = get_piece(start_row, start_col)
-        captured_pieces = tuple(get_piece(row, col) for row, col in move.captures)
+        if original_piece is None:
+            raise ValueError(f"no piece to move: {move}")
+
+        captured_pieces_list: list[Piece] = []
+        for row, col in move.captures:
+            captured_piece = get_piece(row, col)
+            if captured_piece is None:
+                raise ValueError(f"no piece to capture at ({row}, {col})")
+            captured_pieces_list.append(captured_piece)
+        captured_pieces = tuple(captured_pieces_list)
 
         set_piece(start_row, start_col, None)
         for row, col in move.captures:
